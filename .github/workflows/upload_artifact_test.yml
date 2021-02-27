@@ -36,8 +36,10 @@ jobs:
           echo test, and deploy your project.
 
       - name: Github LFS
+        working-directory: ${{github.workspace}}
         run: |
           echo Github LFS
           ls
-          echo ****************
           tar --version
+          tar -xjf gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2
+          ls
