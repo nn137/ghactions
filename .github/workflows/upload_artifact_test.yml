@@ -40,4 +40,4 @@ jobs:
           echo Github LFS
           ls
           echo ****************
-          tar -v
+          tar --version
