@@ -39,5 +39,5 @@ jobs:
         run: |
           echo Github LFS
           ls
-          ech ****************
+          echo ****************
           tar -v
