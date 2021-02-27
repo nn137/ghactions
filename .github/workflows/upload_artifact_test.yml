@@ -39,13 +39,15 @@ jobs:
           ls -la
           tar --version
           file ${{github.workspace}}/$GCC_ARM-x86_64-linux.tar.bz2
-          tar -xvjf ${{github.workspace}}/$GCC_ARM-x86_64-linux.tar.bz2
+          tar -xjf ${{github.workspace}}/$GCC_ARM-x86_64-linux.tar.bz2
           ls -la
 
       - name: Update path
         working-directory: ${{github.workspace}}
         run: |
           ls -la
-          echo $PATH
-          export PATH="$GCC_ARM/bin:$PATH"
-          arm-none-eabi-gcc --version
+          sudo apt-get install gcc-arm-none-eabi
+          # echo $PATH
+          # export PATH="$GCC_ARM/bin:$PATH"
+          # arm-none-eabi-gcc --version
+          # echo $PATH
