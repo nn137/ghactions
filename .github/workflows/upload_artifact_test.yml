@@ -2,16 +2,11 @@
 
 name: Upload Artifact Test
 
-# Controls when the action will run.
-on:
-  # Triggers the workflow on push or pull request events but only for the main branch
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+on: [push]
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  GCC_ARM: gcc-arm-none-eabi-10-2020-q4-major
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -43,6 +38,14 @@ jobs:
           echo Github LFS
           ls -la
           tar --version
-          file ${{github.workspace}}/gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2
-          tar -xjf ${{github.workspace}}/gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2
+          file ${{github.workspace}}/$GCC_ARM-x86_64-linux.tar.bz2
+          tar -xvjf ${{github.workspace}}/$GCC_ARM-x86_64-linux.tar.bz2
           ls -la
+
+      - name: Update path
+        working-directory: ${{github.workspace}}
+        run: |
+          ls -la
+          echo $PATH
+          export PATH="$GCC_ARM/bin:$PATH"
+          arm-none-eabi-gcc --version
