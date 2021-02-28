@@ -7,6 +7,8 @@ on: [push]
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   GCC_ARM: gcc-arm-none-eabi-10-2020-q4-major
+  GCC_ARM_9_DOWNLOAD: https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2
+  GCC_ARM_9_FILENAME: gcc_arm.tar.bz2
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -46,8 +48,36 @@ jobs:
         working-directory: ${{github.workspace}}
         run: |
           ls -la
-          sudo apt-get install gcc-arm-none-eabi
           # echo $PATH
           # export PATH="$GCC_ARM/bin:$PATH"
           # arm-none-eabi-gcc --version
           # echo $PATH
+
+      - name: APT install GCC_ARM
+        run: |
+          ls -la
+          # sudo apt-get install gcc-arm-none-eabi
+
+      - name: Cache GCC_ARM
+        id: cache-gcc-arm
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/$GCC_ARM_9_FILENAME
+          key: ${{ runner.os }}-gcc-arm
+
+      - name: Download GCC_ARM
+        if: steps.cache-gcc-arm.outputs.cache-hit != 'true'
+        run: |
+          echo Downloading GCC_ARM
+          curl $GCC_ARM_9_DOWNLOAD --output $GCC_ARM_9_FILENAME
+          ls -la
+
+      - name: Using GCC_ARM
+        run: |
+          echo Using GCC_ARM
+          tar -xjf ${{github.workspace}}/$GCC_ARM_9_FILENAME
+          ls -la
+          echo $PATH
+          export PATH="$GCC_ARM/bin:$PATH"
+          arm-none-eabi-gcc --version
+          echo $PATH
